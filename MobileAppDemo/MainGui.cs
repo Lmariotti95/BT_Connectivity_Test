@@ -272,5 +272,11 @@ namespace MobileAppDemo
             PdfUtils.ExportListView(listViewRxDataViewer, fileName);
             Process.Start(fileName);
         }
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AboutBox aboutBox = new AboutBox();
+            aboutBox.ShowDialog();
+        }
     }
 }
