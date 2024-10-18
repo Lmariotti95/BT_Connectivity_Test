@@ -1,0 +1,104 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Francesco\\source\\repos\\MobileAppDemo\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{8EAE719F-47E0-4847-831B-D95AFF66437D}|MobileAppDemo\\MobileAppDemo.csproj|c:\\users\\francesco\\source\\repos\\mobileappdemo\\mobileappdemo\\dataparser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8EAE719F-47E0-4847-831B-D95AFF66437D}|MobileAppDemo\\MobileAppDemo.csproj|solutionrelative:mobileappdemo\\dataparser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8EAE719F-47E0-4847-831B-D95AFF66437D}|MobileAppDemo\\MobileAppDemo.csproj|c:\\users\\francesco\\source\\repos\\mobileappdemo\\mobileappdemo\\maingui.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8EAE719F-47E0-4847-831B-D95AFF66437D}|MobileAppDemo\\MobileAppDemo.csproj|solutionrelative:mobileappdemo\\maingui.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8EAE719F-47E0-4847-831B-D95AFF66437D}|MobileAppDemo\\MobileAppDemo.csproj|C:\\Users\\Francesco\\source\\repos\\MobileAppDemo\\mobileappdemo\\maingui.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{8EAE719F-47E0-4847-831B-D95AFF66437D}|MobileAppDemo\\MobileAppDemo.csproj|solutionrelative:mobileappdemo\\maingui.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8EAE719F-47E0-4847-831B-D95AFF66437D}|MobileAppDemo\\MobileAppDemo.csproj|c:\\users\\francesco\\source\\repos\\mobileappdemo\\mobileappdemo\\bluetooth.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8EAE719F-47E0-4847-831B-D95AFF66437D}|MobileAppDemo\\MobileAppDemo.csproj|solutionrelative:mobileappdemo\\bluetooth.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8EAE719F-47E0-4847-831B-D95AFF66437D}|MobileAppDemo\\MobileAppDemo.csproj|c:\\users\\francesco\\source\\repos\\mobileappdemo\\mobileappdemo\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8EAE719F-47E0-4847-831B-D95AFF66437D}|MobileAppDemo\\MobileAppDemo.csproj|solutionrelative:mobileappdemo\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "DataParser.cs",
+              "DocumentMoniker": "C:\\Users\\Francesco\\source\\repos\\MobileAppDemo\\MobileAppDemo\\DataParser.cs",
+              "RelativeDocumentMoniker": "MobileAppDemo\\DataParser.cs",
+              "ToolTip": "C:\\Users\\Francesco\\source\\repos\\MobileAppDemo\\MobileAppDemo\\DataParser.cs",
+              "RelativeToolTip": "MobileAppDemo\\DataParser.cs",
+              "ViewState": "AQIAAAsAAAAAAAAAAAAQwI0AAAATAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-18T08:04:03.013Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\Francesco\\source\\repos\\MobileAppDemo\\MobileAppDemo\\Program.cs",
+              "RelativeDocumentMoniker": "MobileAppDemo\\Program.cs",
+              "ToolTip": "C:\\Users\\Francesco\\source\\repos\\MobileAppDemo\\MobileAppDemo\\Program.cs",
+              "RelativeToolTip": "MobileAppDemo\\Program.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-18T08:04:00.494Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Bluetooth.cs",
+              "DocumentMoniker": "C:\\Users\\Francesco\\source\\repos\\MobileAppDemo\\MobileAppDemo\\Bluetooth.cs",
+              "RelativeDocumentMoniker": "MobileAppDemo\\Bluetooth.cs",
+              "ToolTip": "C:\\Users\\Francesco\\source\\repos\\MobileAppDemo\\MobileAppDemo\\Bluetooth.cs",
+              "RelativeToolTip": "MobileAppDemo\\Bluetooth.cs",
+              "ViewState": "AQIAABAAAAAAAAAAAAAgwAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-18T08:03:56.247Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "MainGui.cs",
+              "DocumentMoniker": "C:\\Users\\Francesco\\source\\repos\\MobileAppDemo\\MobileAppDemo\\MainGui.cs",
+              "RelativeDocumentMoniker": "MobileAppDemo\\MainGui.cs",
+              "ToolTip": "C:\\Users\\Francesco\\source\\repos\\MobileAppDemo\\MobileAppDemo\\MainGui.cs",
+              "RelativeToolTip": "MobileAppDemo\\MainGui.cs",
+              "ViewState": "AQIAAKYAAAAAAAAAAAAYwL8AAAAeAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-17T10:56:26.285Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "MainGui.cs [Design]",
+              "DocumentMoniker": "C:\\Users\\Francesco\\source\\repos\\MobileAppDemo\\MobileAppDemo\\MainGui.cs",
+              "RelativeDocumentMoniker": "MobileAppDemo\\MainGui.cs",
+              "ToolTip": "C:\\Users\\Francesco\\source\\repos\\MobileAppDemo\\MobileAppDemo\\MainGui.cs [Design]",
+              "RelativeToolTip": "MobileAppDemo\\MainGui.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-17T10:55:44.977Z",
+              "EditorCaption": " [Design]"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
