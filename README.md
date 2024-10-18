@@ -35,6 +35,6 @@ AT+UBTLE?     // Verifica se la modalità BLE è attiva
   AT+UDSC=1,6 // Abilita il server SPS
   AT&W        // Salva la configurazione
   AT+CPWROF   // Esegue un reboot
-AT+UBTAD=020A06051218002800110702456E1B926E28F83E744F34F01E9D701 // Abilita il servizio **Serial Port**
+AT+UBTAD=020A06051218002800110702456E1B926E28F83E744F34F01E9D701 // Abilita il servizio Serial Port
 ATO1          // Entra in Data Mode
 ```
