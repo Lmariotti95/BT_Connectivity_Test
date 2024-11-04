@@ -37,6 +37,7 @@
             this.searchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.connectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.disconnectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.lblStatus = new System.Windows.Forms.Label();
@@ -44,7 +45,6 @@
             this.column1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.column2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.column3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -57,7 +57,7 @@
             this.aboutToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(10, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(724, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(1154, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -103,22 +103,29 @@
             // searchToolStripMenuItem
             // 
             this.searchToolStripMenuItem.Name = "searchToolStripMenuItem";
-            this.searchToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.searchToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
             this.searchToolStripMenuItem.Text = "Search";
             this.searchToolStripMenuItem.Click += new System.EventHandler(this.searchToolStripMenuItem_Click);
             // 
             // connectToolStripMenuItem
             // 
             this.connectToolStripMenuItem.Name = "connectToolStripMenuItem";
-            this.connectToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.connectToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
             this.connectToolStripMenuItem.Text = "Connect";
             // 
             // disconnectToolStripMenuItem
             // 
             this.disconnectToolStripMenuItem.Name = "disconnectToolStripMenuItem";
-            this.disconnectToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.disconnectToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
             this.disconnectToolStripMenuItem.Text = "Disconnect";
             this.disconnectToolStripMenuItem.Click += new System.EventHandler(this.disconnectToolStripMenuItem_Click);
+            // 
+            // aboutToolStripMenuItem
+            // 
+            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(52, 20);
+            this.aboutToolStripMenuItem.Text = "About";
+            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
             // panel1
             // 
@@ -128,7 +135,7 @@
             this.panel1.Location = new System.Drawing.Point(10, 24);
             this.panel1.Name = "panel1";
             this.panel1.Padding = new System.Windows.Forms.Padding(0, 4, 4, 4);
-            this.panel1.Size = new System.Drawing.Size(724, 43);
+            this.panel1.Size = new System.Drawing.Size(1154, 43);
             this.panel1.TabIndex = 2;
             // 
             // label1
@@ -136,7 +143,7 @@
             this.label1.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.label1.Dock = System.Windows.Forms.DockStyle.Right;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(346, 4);
+            this.label1.Location = new System.Drawing.Point(776, 4);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(110, 35);
             this.label1.TabIndex = 0;
@@ -148,7 +155,7 @@
             this.lblStatus.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.lblStatus.Dock = System.Windows.Forms.DockStyle.Right;
             this.lblStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblStatus.Location = new System.Drawing.Point(456, 4);
+            this.lblStatus.Location = new System.Drawing.Point(886, 4);
             this.lblStatus.Name = "lblStatus";
             this.lblStatus.Size = new System.Drawing.Size(264, 35);
             this.lblStatus.TabIndex = 1;
@@ -157,15 +164,18 @@
             // 
             // listViewRxDataViewer
             // 
+            this.listViewRxDataViewer.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.listViewRxDataViewer.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.column1,
             this.column2,
             this.column3});
             this.listViewRxDataViewer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listViewRxDataViewer.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.listViewRxDataViewer.FullRowSelect = true;
             this.listViewRxDataViewer.HideSelection = false;
             this.listViewRxDataViewer.Location = new System.Drawing.Point(10, 67);
             this.listViewRxDataViewer.Name = "listViewRxDataViewer";
-            this.listViewRxDataViewer.Size = new System.Drawing.Size(724, 373);
+            this.listViewRxDataViewer.Size = new System.Drawing.Size(1154, 587);
             this.listViewRxDataViewer.TabIndex = 3;
             this.listViewRxDataViewer.UseCompatibleStateImageBehavior = false;
             this.listViewRxDataViewer.View = System.Windows.Forms.View.Details;
@@ -174,30 +184,23 @@
             // column1
             // 
             this.column1.Text = "";
-            this.column1.Width = 104;
+            this.column1.Width = 190;
             // 
             // column2
             // 
             this.column2.Text = "";
-            this.column2.Width = 116;
+            this.column2.Width = 260;
             // 
             // column3
             // 
             this.column3.Text = "";
-            this.column3.Width = 105;
-            // 
-            // aboutToolStripMenuItem
-            // 
-            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(52, 20);
-            this.aboutToolStripMenuItem.Text = "About";
-            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
+            this.column3.Width = 250;
             // 
             // MainGui
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(744, 450);
+            this.ClientSize = new System.Drawing.Size(1174, 664);
             this.Controls.Add(this.listViewRxDataViewer);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.menuStrip1);

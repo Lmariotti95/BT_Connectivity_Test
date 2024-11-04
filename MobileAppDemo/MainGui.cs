@@ -29,7 +29,7 @@ namespace MobileAppDemo
             DataParser.Instance.SetCommand(new List<BtCommand>
             {
                 new BtCommand() { Text = "ping",        Callback = CallbackPing },
-                new BtCommand() { Text = "START FILE",  Callback = null },
+                new BtCommand() { Text = "START FILE",  Callback = CallbackStartOfFile },
                 new BtCommand() { Text = "END OF FILE", Callback = CallbackEndOfFile }
             });
         }
@@ -161,16 +161,76 @@ namespace MobileAppDemo
         #endregion
 
         #region COMUNICAZIONE BLUETOOTH
+        bool recordingFile = false;
+        string rxPayload = "";
+        
         private void Bt_communication_handler(Stream str)
         {
+            // Inizializzo la stringa di ricezione
+            string rxMsg = "";
+
+            // Inizializzo i comandi gestiti dal bluetooth
+            List <BtCommand> commands = new List<BtCommand>
+            {
+                new BtCommand() { Text = "ping\r\n",          Callback = CallbackPing },
+                new BtCommand() { Text = "START OF FILE\r\n", Callback = CallbackStartOfFile },
+                new BtCommand() { Text = "END OF FILE\r\n",   Callback = CallbackEndOfFile }
+            };
+
             while (true)
             {
                 try
                 {
+                    // Leggo byte a byte
                     int data = str.ReadByte();
                     if (data != -1)
                     {
-                        DataParser.Instance.PushCharacter((char)data);
+                        rxMsg += (char)data;
+
+                        // Se è abilitata la registrazione del corpo del messaggio
+                        if (recordingFile)
+                            rxPayload += (char)data;
+
+                        // Scorro i comandi
+                        foreach (BtCommand cmd in commands)
+                        {
+                            int x = rxMsg.IndexOf(cmd.Text);
+
+                            // Se la stringa contiene un messaggio valido
+                            if (x != -1)
+                            {
+                                rxMsg = "";// rxMsg.Remove(x, cmd.Text.Length);
+
+                                if (recordingFile)
+                                { 
+                                    int k = rxPayload.IndexOf(cmd.Text);
+                                    if (k != -1)
+                                        rxPayload = rxPayload.Remove(k, cmd.Text.Length);
+                                }
+                                
+                                if(cmd.Callback != null)
+                                {
+                                    Invoke((Action)(() => 
+                                    {
+                                        cmd.Callback(); 
+                                    }));
+                                }
+                            }
+                        }
+
+                        //char ch = (char)data;
+                        //dummyString[i] = ch;
+
+                        //if (ch == '\n')
+                        //{
+                        //    dummyString[i + 1] = '\0';
+                        //    DataParser.Instance.PushString(new string(dummyString));
+                        //    i = 0;
+                        //}
+                        //else
+                        //{
+                        //    i = (++i) % dummyString.Length;
+                        //}
                         //UpdateRxData((char)data);
                     }
                 }
@@ -186,10 +246,26 @@ namespace MobileAppDemo
             byte[] bResponse = Encoding.ASCII.GetBytes("pong");
             str.Write(bResponse, 0, bResponse.Length);
         }
+        private void CallbackStartOfFile()
+        {
+            recordingFile = true;
+        }
 
         private void CallbackEndOfFile()
         {
-            List<string> lines = DataParser.Instance.GetPayload();
+            recordingFile = false;
+
+            List<string> lines = rxPayload.Split('\n').ToList();
+            //List<string> lines = DataParser.Instance.GetPayload();
+
+            rxPayload = "";
+
+            string msg = "";
+            foreach (string s in lines)
+            {
+                msg += s;
+            }
+
             List<ListViewItem> items = new List<ListViewItem>();
 
             const char CSV_SEPARATOR = ';';

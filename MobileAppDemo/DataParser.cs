@@ -76,9 +76,13 @@ namespace MobileAppDemo
         {
             int parsingLine = 0;
             while (true)
-            {
+            { 
+                parsingLine = fillLine - 1;
+                if (parsingLine < 0)
+                    parsingLine = LINE_BUFF_SIZE - 1;
+
                 // Se è richiesto di controllare l'i-esima riga
-                if(rawLine[parsingLine].Parse)
+                if (rawLine[parsingLine].Parse)
                 {
                     // Verifico che contenga il terminatore
                     if (rawLine[parsingLine].Text.Contains(EOL_IDENTIFIER))
@@ -131,6 +135,17 @@ namespace MobileAppDemo
                 // Mi sposto in modo circolare alla prossima riga da riempire
                 fillLine = (++fillLine) % LINE_BUFF_SIZE;
             }
+        }
+
+        public void PushString(string str)
+        {
+            rawLine[fillLine].Text = str;
+
+            // Segnalo che posso controllare la riga i-esima
+            rawLine[fillLine].Parse = true;
+
+            // Mi sposto in modo circolare alla prossima riga da riempire
+            fillLine = (++fillLine) % LINE_BUFF_SIZE;
         }
 
         public List<string> GetPayload()
