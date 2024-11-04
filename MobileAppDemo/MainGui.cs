@@ -62,6 +62,12 @@ namespace MobileAppDemo
             listViewRxDataViewer.Items.AddRange(items.ToArray());
         }
 
+        private void ResetTimer(System.Windows.Forms.Timer timer)
+        {
+            timer.Stop();
+            timer.Start();
+        }
+
         #region BLUETOOTH
         private void ScanDevices()
         {
@@ -139,6 +145,18 @@ namespace MobileAppDemo
             }
         }
 
+
+        public void UpdatePictureBox(PictureBox pBox, Image img)
+        {
+            if (InvokeRequired)
+            {
+                this.Invoke(new Action<PictureBox, Image>(UpdatePictureBox), new object[] { pBox, img });
+                return;
+            }
+
+            pBox.Image = img;
+        }
+
         private void Manage_bt_disconnect()
         {
             // Se il thread di comunicazione è definito
@@ -156,6 +174,8 @@ namespace MobileAppDemo
                 btThreadListener = null;
             }
 
+            commTimeoutTimer.Stop();
+            pictureBoxStatus.Image = Properties.Resources.RadioIconRed;
             SetStatus($"Not connected");
         }
         #endregion
@@ -242,21 +262,29 @@ namespace MobileAppDemo
         #region CALLBACKS
         private void CallbackPing()
         {
+            ResetTimer(commTimeoutTimer);
+            UpdatePictureBox(pictureBoxStatus, Properties.Resources.RadioIconGreen);
             Stream str = btClient.GetStream();
             byte[] bResponse = Encoding.ASCII.GetBytes("pong");
             str.Write(bResponse, 0, bResponse.Length);
         }
         private void CallbackStartOfFile()
         {
+            ResetTimer(commTimeoutTimer);
+            UpdatePictureBox(pictureBoxStatus, Properties.Resources.RadioIconGreen);
             recordingFile = true;
         }
 
         private void CallbackEndOfFile()
         {
+            ResetTimer(commTimeoutTimer);
+            UpdatePictureBox(pictureBoxStatus, Properties.Resources.RadioIconGreen);
             recordingFile = false;
 
             List<string> lines = rxPayload.Split('\n').ToList();
             //List<string> lines = DataParser.Instance.GetPayload();
+
+            PdfUtils.ExportRawLines(lines);
 
             rxPayload = "";
 
@@ -353,6 +381,11 @@ namespace MobileAppDemo
         {
             AboutBox aboutBox = new AboutBox();
             aboutBox.ShowDialog();
+        }
+
+        private void commTimeoutTimer_Tick(object sender, EventArgs e)
+        {
+            UpdatePictureBox(pictureBoxStatus, Properties.Resources.RadioIconRed);
         }
     }
 }

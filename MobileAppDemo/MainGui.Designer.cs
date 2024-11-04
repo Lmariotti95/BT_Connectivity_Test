@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -45,8 +46,11 @@
             this.column1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.column2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.column3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.commTimeoutTimer = new System.Windows.Forms.Timer(this.components);
+            this.pictureBoxStatus = new System.Windows.Forms.PictureBox();
             this.menuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxStatus)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -129,13 +133,14 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.pictureBoxStatus);
             this.panel1.Controls.Add(this.label1);
             this.panel1.Controls.Add(this.lblStatus);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(10, 24);
             this.panel1.Name = "panel1";
             this.panel1.Padding = new System.Windows.Forms.Padding(0, 4, 4, 4);
-            this.panel1.Size = new System.Drawing.Size(1154, 43);
+            this.panel1.Size = new System.Drawing.Size(1154, 60);
             this.panel1.TabIndex = 2;
             // 
             // label1
@@ -145,7 +150,7 @@
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(776, 4);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(110, 35);
+            this.label1.Size = new System.Drawing.Size(110, 52);
             this.label1.TabIndex = 0;
             this.label1.Text = "Stauts:";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -157,7 +162,7 @@
             this.lblStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblStatus.Location = new System.Drawing.Point(886, 4);
             this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(264, 35);
+            this.lblStatus.Size = new System.Drawing.Size(264, 52);
             this.lblStatus.TabIndex = 1;
             this.lblStatus.Text = "Not connected";
             this.lblStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -173,9 +178,9 @@
             this.listViewRxDataViewer.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.listViewRxDataViewer.FullRowSelect = true;
             this.listViewRxDataViewer.HideSelection = false;
-            this.listViewRxDataViewer.Location = new System.Drawing.Point(10, 67);
+            this.listViewRxDataViewer.Location = new System.Drawing.Point(10, 84);
             this.listViewRxDataViewer.Name = "listViewRxDataViewer";
-            this.listViewRxDataViewer.Size = new System.Drawing.Size(1154, 587);
+            this.listViewRxDataViewer.Size = new System.Drawing.Size(1154, 570);
             this.listViewRxDataViewer.TabIndex = 3;
             this.listViewRxDataViewer.UseCompatibleStateImageBehavior = false;
             this.listViewRxDataViewer.View = System.Windows.Forms.View.Details;
@@ -184,17 +189,32 @@
             // column1
             // 
             this.column1.Text = "";
-            this.column1.Width = 190;
+            this.column1.Width = 347;
             // 
             // column2
             // 
             this.column2.Text = "";
-            this.column2.Width = 260;
+            this.column2.Width = 333;
             // 
             // column3
             // 
             this.column3.Text = "";
-            this.column3.Width = 250;
+            this.column3.Width = 369;
+            // 
+            // commTimeoutTimer
+            // 
+            this.commTimeoutTimer.Interval = 1000;
+            this.commTimeoutTimer.Tick += new System.EventHandler(this.commTimeoutTimer_Tick);
+            // 
+            // pictureBoxStatus
+            // 
+            this.pictureBoxStatus.Image = global::MobileAppDemo.Properties.Resources.RadioIconRed;
+            this.pictureBoxStatus.Location = new System.Drawing.Point(3, 4);
+            this.pictureBoxStatus.Name = "pictureBoxStatus";
+            this.pictureBoxStatus.Size = new System.Drawing.Size(48, 48);
+            this.pictureBoxStatus.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBoxStatus.TabIndex = 2;
+            this.pictureBoxStatus.TabStop = false;
             // 
             // MainGui
             // 
@@ -211,6 +231,8 @@
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxStatus)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -235,6 +257,8 @@
         private System.Windows.Forms.ToolStripMenuItem exportToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
+        private System.Windows.Forms.Timer commTimeoutTimer;
+        private System.Windows.Forms.PictureBox pictureBoxStatus;
     }
 }
 
