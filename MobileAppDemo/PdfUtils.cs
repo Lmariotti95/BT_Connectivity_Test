@@ -104,11 +104,17 @@ namespace MobileAppDemo
             ExportCsvList(newLines, fileName);
         }
 
-        public static void ExportRawLines(List<string> lines)
+        public static void ExportRawLines(string fileName, List<string> lines)
         {
-            string fileName = $"output_{DateTime.Now.ToString("-HH-mm-ss")}.pdf";
+            ExportRawLines(fileName, lines, false);
+        }
+
+        public static void ExportRawLines(string fileName, List<string> lines, bool openFile)
+        {
             ExportRawLines(lines, fileName);
-            Process.Start(fileName);
+
+            if(openFile)
+                Process.Start(fileName);
         }
     }
 }

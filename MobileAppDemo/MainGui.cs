@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Diagnostics;
 using System.Text;
+using Org.BouncyCastle.Utilities.Encoders;
 
 namespace MobileAppDemo
 {
@@ -32,6 +33,14 @@ namespace MobileAppDemo
                 new BtCommand() { Text = "START FILE",  Callback = CallbackStartOfFile },
                 new BtCommand() { Text = "END OF FILE", Callback = CallbackEndOfFile }
             });
+
+            ImageList imageList = new ImageList();
+            imageList.Images.Add("Folder", Properties.Resources.folder_ico_48_48); // Add folder icon
+            imageList.Images.Add("File", Properties.Resources.file_ico_48_48);     // Add file icon
+            imageList.ImageSize = new Size(32, 32);
+            treeViewTickets.ImageList = imageList;
+
+            PopulateTreeView(".\\Tickets");
         }
 
         private void closeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -50,22 +59,82 @@ namespace MobileAppDemo
             lblStatus.Text = status;
         }
 
-        private void UpdateRxData(List<ListViewItem> items)
-        {
-            if (InvokeRequired)
-            {
-                this.Invoke(new Action<List<ListViewItem>>(UpdateRxData), new object[] { items });
-                return;
-            }
-
-            listViewRxDataViewer.Items.Clear();
-            listViewRxDataViewer.Items.AddRange(items.ToArray());
-        }
-
         private void ResetTimer(System.Windows.Forms.Timer timer)
         {
             timer.Stop();
             timer.Start();
+        }
+
+        public void PopulateTreeView(string rootFolderPath)
+        {
+            // Clear existing nodes
+            treeViewTickets.Nodes.Clear();
+
+            // Create the root node based on the folder
+            DirectoryInfo rootDir = new DirectoryInfo(rootFolderPath);
+            TreeNode rootNode = new TreeNode(rootDir.Name) { Tag = rootDir, ImageKey = "Folder", SelectedImageKey = "Folder" };
+            treeViewTickets.Nodes.Add(rootNode);
+
+            // Populate the tree with files and folders
+            PopulateTreeNode(rootNode);
+
+            treeViewTickets.NodeMouseDoubleClick += TreeViewTickets_NodeMouseDoubleClick;
+        }
+
+        private void PopulateTreeNode(TreeNode node)
+        {
+            DirectoryInfo directory = (DirectoryInfo)node.Tag;
+
+            try
+            {
+                // Add folders
+                foreach (var dir in directory.GetDirectories())
+                {
+                    TreeNode dirNode = new TreeNode(dir.Name)
+                    {
+                        Tag = dir,
+                        ImageKey = "Folder",
+                        SelectedImageKey = "Folder"
+                    };
+
+                    node.Nodes.Add(dirNode);
+                    PopulateTreeNode(dirNode); // Recursive call for subdirectories
+                }
+
+                // Add files
+                foreach (var file in directory.GetFiles())
+                {
+                    TreeNode fileNode = new TreeNode(file.Name)
+                    {
+                        Tag = file,
+                        ImageKey = "File",
+                        SelectedImageKey = "File"
+                    };
+
+                    node.Nodes.Add(fileNode);
+                }
+            }
+            catch (UnauthorizedAccessException)
+            {
+                // Handle access-denied errors if needed
+            }
+        }
+
+        private void TreeViewTickets_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            // Check if the clicked node is a file (not a directory)
+            if (e.Node.Tag is FileInfo fileInfo)
+            {
+                try
+                {
+                    // Open the file with the default associated application
+                    Process.Start(fileInfo.FullName);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error opening file: " + ex.Message);
+                }
+            }
         }
 
         #region BLUETOOTH
@@ -237,21 +306,6 @@ namespace MobileAppDemo
                                 }
                             }
                         }
-
-                        //char ch = (char)data;
-                        //dummyString[i] = ch;
-
-                        //if (ch == '\n')
-                        //{
-                        //    dummyString[i + 1] = '\0';
-                        //    DataParser.Instance.PushString(new string(dummyString));
-                        //    i = 0;
-                        //}
-                        //else
-                        //{
-                        //    i = (++i) % dummyString.Length;
-                        //}
-                        //UpdateRxData((char)data);
                     }
                 }
                 catch (IOException) { }
@@ -275,46 +329,59 @@ namespace MobileAppDemo
             recordingFile = true;
         }
 
+        private UInt32 GetRxCrc32(string msg)
+        {
+            try
+            {
+                string hexStr = msg.Substring(msg.Length - 10, 8);
+                return UInt32.Parse(hexStr, System.Globalization.NumberStyles.HexNumber);
+            }
+            catch(Exception)
+            {
+                return Crc32.DEFAULT_CRC32;
+            }
+        }
+
         private void CallbackEndOfFile()
         {
             ResetTimer(commTimeoutTimer);
             UpdatePictureBox(pictureBoxStatus, Properties.Resources.RadioIconGreen);
             recordingFile = false;
 
-            List<string> lines = rxPayload.Split('\n').ToList();
-            //List<string> lines = DataParser.Instance.GetPayload();
+            // 8 caratteri di CRC32 e 2 caratteri di CR LF
+            string rxPayloadNoCrc32 = rxPayload.Substring(0, rxPayload.Length - 10);
 
-            PdfUtils.ExportRawLines(lines);
+            UInt32 calcCrc32 = Crc32.Append(rxPayloadNoCrc32, Crc32.DEFAULT_CRC32, Crc32.DEFAULT_CRC32_XOR);
+            UInt32 rxCrc32 = GetRxCrc32(rxPayload);
+
+            if (calcCrc32 != rxCrc32)
+            {
+                MessageBox.Show("Unvalid message received", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
 
             rxPayload = "";
 
-            string msg = "";
-            foreach (string s in lines)
-            {
-                msg += s;
-            }
-
-            List<ListViewItem> items = new List<ListViewItem>();
-
-            const char CSV_SEPARATOR = ';';
-            listViewRxDataViewer.Items.Clear();
-
+            List<string> lines = rxPayloadNoCrc32.Split('\n').ToList();
+            
+            string lblTicketId = "RECEIPT ID";
             foreach (string line in lines)
             {
-                var fields = line.Trim('\n').Trim('\r').Split(CSV_SEPARATOR).ToList();
+                if(line.Contains(lblTicketId))
+                {
+                    var fields = line.Trim('\n').Trim('\r').Split(';').ToList();
+                    if (fields.Count > 1)
+                    {
+                        string folderName = "Tickets";
+                        string fileName = $"{fields[1]}.pdf";
+                        PdfUtils.ExportRawLines(Path.Combine(folderName, fileName), lines);
 
-                while (fields.Count < 3)
-                    fields.Add("");
-
-                ListViewItem item = new ListViewItem(fields[0]);
-                item.SubItems.Add(fields[1]);
-                item.SubItems.Add(fields[2]);
-
-                // Add the item to the ListView
-                items.Add(item);
+                        PopulateTreeView(".\\Tickets");
+                        break;
+                    }
+                }
             }
 
-            UpdateRxData(items);
             btClient.GetStream().Flush();
             DataParser.Instance.ClrPayload();
         }
@@ -364,17 +431,9 @@ namespace MobileAppDemo
             Manage_bt_disconnect();
         }
 
-        private void listViewRxDataViewer_DoubleClick(object sender, EventArgs e)
-        {
-            listViewRxDataViewer.Items.Clear();
-        }
-
         private void exportToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string fileName = "output.pdf";
 
-            PdfUtils.ExportListView(listViewRxDataViewer, fileName);
-            Process.Start(fileName);
         }
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)

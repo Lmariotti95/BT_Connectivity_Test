@@ -63,6 +63,26 @@ namespace MobileAppDemo.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap file_ico_48_48 {
+            get {
+                object obj = ResourceManager.GetObject("file_ico_48_48", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap folder_ico_48_48 {
+            get {
+                object obj = ResourceManager.GetObject("folder_ico_48_48", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap RadioIconGreen {
             get {
                 object obj = ResourceManager.GetObject("RadioIconGreen", resourceCulture);

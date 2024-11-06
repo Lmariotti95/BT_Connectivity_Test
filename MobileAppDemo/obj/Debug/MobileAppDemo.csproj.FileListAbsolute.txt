@@ -23,6 +23,7 @@ C:\Users\Francesco\source\repos\MobileAppDemo\MobileAppDemo\bin\Debug\System.Mem
 C:\Users\Francesco\source\repos\MobileAppDemo\MobileAppDemo\bin\Debug\System.Numerics.Vectors.xml
 C:\Users\Francesco\source\repos\MobileAppDemo\MobileAppDemo\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
 C:\Users\Francesco\source\repos\MobileAppDemo\MobileAppDemo\obj\Debug\MobileAppDemo.csproj.AssemblyReference.cache
+C:\Users\Francesco\source\repos\MobileAppDemo\MobileAppDemo\obj\Debug\MobileAppDemo.AboutBox.resources
 C:\Users\Francesco\source\repos\MobileAppDemo\MobileAppDemo\obj\Debug\MobileAppDemo.MainGui.resources
 C:\Users\Francesco\source\repos\MobileAppDemo\MobileAppDemo\obj\Debug\MobileAppDemo.Properties.Resources.resources
 C:\Users\Francesco\source\repos\MobileAppDemo\MobileAppDemo\obj\Debug\MobileAppDemo.csproj.GenerateResource.cache
@@ -30,4 +31,3 @@ C:\Users\Francesco\source\repos\MobileAppDemo\MobileAppDemo\obj\Debug\MobileAppD
 C:\Users\Francesco\source\repos\MobileAppDemo\MobileAppDemo\obj\Debug\MobileAp.856C34C1.Up2Date
 C:\Users\Francesco\source\repos\MobileAppDemo\MobileAppDemo\obj\Debug\MobileAppDemo.exe
 C:\Users\Francesco\source\repos\MobileAppDemo\MobileAppDemo\obj\Debug\MobileAppDemo.pdb
-C:\Users\Francesco\source\repos\MobileAppDemo\MobileAppDemo\obj\Debug\MobileAppDemo.AboutBox.resources
