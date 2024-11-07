@@ -54,6 +54,12 @@ namespace MobileAppDemo
 
             // Start monitoring
             fileSystemWatcher.EnableRaisingEvents = true;
+
+            //List<List<string>> lines = new List<List<string>>();
+            //List<string> l = new List<string>();
+            //l.Add("微軟正黑體");
+            //lines.Add(l);
+            //PdfUtils.ExportCsvList(lines, Path.Combine(CommonPaths.ticketFolder, "prova.pdf"));
         }
 
         private void OnChanged(object sender, FileSystemEventArgs e)

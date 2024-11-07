@@ -36,8 +36,10 @@ namespace MobileAppDemo
                     table.WidthPercentage = 100;
 
                     // Use a Unicode-compatible font
-                    string fontPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Fonts), "NotoSans-Regular.ttf"); // Adjust font file name as needed
-                    BaseFont baseFont = BaseFont.CreateFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+                    string fontPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Fonts), "Msjh.ttc"); // Adjust font file name as needed
+                    int fontIndex = 1; // 1 = Cinese
+                    string fontPathWithIndex = fontPath + "," + fontIndex;
+                    BaseFont baseFont = BaseFont.CreateFont(fontPathWithIndex, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
                     Font unicodeFont = new Font(baseFont, 6);
 
                     for (int rowIndex = 0; rowIndex < lines.Count; rowIndex++)
