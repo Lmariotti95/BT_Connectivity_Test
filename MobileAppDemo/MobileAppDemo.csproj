@@ -81,6 +81,7 @@
     </Compile>
     <Compile Include="Bluetooth.cs" />
     <Compile Include="BtCommand.cs" />
+    <Compile Include="CommonPaths.cs" />
     <Compile Include="Crc32.cs" />
     <Compile Include="DataParser.cs" />
     <Compile Include="MainGui.cs">

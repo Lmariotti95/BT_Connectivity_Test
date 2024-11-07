@@ -23,34 +23,31 @@ namespace MobileAppDemo
                     PdfWriter writer = PdfWriter.GetInstance(document, fs);
                     document.Open();
 
-                    int maxLen = 0;
-                    for (int i = 0; i < lines.Count; i++)
-                        if (lines[i].Count > maxLen)
-                            maxLen = lines[i].Count;
+                    int maxLen = lines.Max(row => row.Count);
 
                     PdfPTable table = new PdfPTable(maxLen);
-                    //PdfPRow row = null;
 
                     float[] widths = new float[maxLen];
                     for (int i = 0; i < maxLen; i++)
-                    {
                         widths[i] = 4f; // Adjust this as needed
-                    }
+
                     table.SetWidths(widths);
 
                     table.WidthPercentage = 100;
+
+                    // Use a Unicode-compatible font
+                    string fontPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Fonts), "NotoSans-Regular.ttf"); // Adjust font file name as needed
+                    BaseFont baseFont = BaseFont.CreateFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+                    Font unicodeFont = new Font(baseFont, 6);
 
                     for (int rowIndex = 0; rowIndex < lines.Count; rowIndex++)
                     {
                         BaseColor bgColor = (rowIndex % 2 == 0) ? BaseColor.White : new BaseColor(240, 240, 240); // Light gray for odd rows
 
-                        Font font5 = FontFactory.GetFont(FontFactory.HELVETICA, 6);
-
                         // Add each subitem (column) from the ListViewItem
                         for (int i = 0; i < lines[rowIndex].Count; i++)
                         {
-
-                            PdfPCell cell = new PdfPCell(new Phrase(lines[rowIndex][i].Trim(), font5))
+                            PdfPCell cell = new PdfPCell(new Phrase(lines[rowIndex][i].Trim(), unicodeFont))
                             {
                                 MinimumHeight = 20f,       // Set higher row height for data cells
                                 BackgroundColor = bgColor // Set alternating background color

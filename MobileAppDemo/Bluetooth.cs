@@ -47,8 +47,14 @@ namespace MobileAppDemo
             return false;
         }
 
-        //public static bool Disconnect(BluetoothDeviceInfo deviceConnected)
-        //{
-        //}
+        public static void Disconnect(BluetoothClient client)
+        {
+            if (client != null)
+            {
+                client.Client.Disconnect(true);
+                client.Close();
+                client.Dispose();
+            }
+        }
     }
 }

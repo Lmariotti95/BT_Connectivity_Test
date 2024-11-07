@@ -10,7 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Diagnostics;
 using System.Text;
-using Org.BouncyCastle.Utilities.Encoders;
+using iTextSharp.text.xml.xmp;
 
 namespace MobileAppDemo
 {
@@ -22,6 +22,7 @@ namespace MobileAppDemo
         BluetoothClient btClient;
 
         Thread btThreadListener = null;
+        FileSystemWatcher fileSystemWatcher = null;
 
         public MainGui()
         {
@@ -40,7 +41,25 @@ namespace MobileAppDemo
             imageList.ImageSize = new Size(32, 32);
             treeViewTickets.ImageList = imageList;
 
-            PopulateTreeView(".\\Tickets");
+            PopulateTreeView(CommonPaths.ticketFolder);
+            treeViewTickets.NodeMouseDoubleClick += TreeViewTickets_NodeMouseDoubleClick;
+
+            FileSystemWatcher fileSystemWatcher = new FileSystemWatcher(CommonPaths.ticketFolder);
+            fileSystemWatcher.IncludeSubdirectories = true;
+            fileSystemWatcher.NotifyFilter = NotifyFilters.FileName | NotifyFilters.DirectoryName | NotifyFilters.LastWrite;
+
+            fileSystemWatcher.Created += OnChanged;
+            fileSystemWatcher.Deleted += OnChanged;
+            fileSystemWatcher.Renamed += OnChanged;
+
+            // Start monitoring
+            fileSystemWatcher.EnableRaisingEvents = true;
+        }
+
+        private void OnChanged(object sender, FileSystemEventArgs e)
+        {
+            // Reload the folder structure on any change event
+            this.BeginInvoke((Action)(() => PopulateTreeView(CommonPaths.ticketFolder)));
         }
 
         private void closeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -72,13 +91,18 @@ namespace MobileAppDemo
 
             // Create the root node based on the folder
             DirectoryInfo rootDir = new DirectoryInfo(rootFolderPath);
-            TreeNode rootNode = new TreeNode(rootDir.Name) { Tag = rootDir, ImageKey = "Folder", SelectedImageKey = "Folder" };
+            TreeNode rootNode = new TreeNode(rootDir.Name) 
+            { 
+                Tag = rootDir, 
+                ImageKey = "Folder", 
+                SelectedImageKey = "Folder" 
+            };
+
             treeViewTickets.Nodes.Add(rootNode);
 
             // Populate the tree with files and folders
             PopulateTreeNode(rootNode);
-
-            treeViewTickets.NodeMouseDoubleClick += TreeViewTickets_NodeMouseDoubleClick;
+            treeViewTickets.ExpandAll();
         }
 
         private void PopulateTreeNode(TreeNode node)
@@ -234,12 +258,7 @@ namespace MobileAppDemo
                 Utils.CloseThread(btThreadListener);
 
                 // Se il client connessto è definito
-                if (btClient != null)
-                {
-                    btClient.Close();
-                    btClient.Dispose();
-                }
-
+                Bluetooth.Disconnect(btClient);
                 btThreadListener = null;
             }
 
@@ -252,11 +271,13 @@ namespace MobileAppDemo
         #region COMUNICAZIONE BLUETOOTH
         bool recordingFile = false;
         string rxPayload = "";
-        
+        List<byte> rxDataPayload = new List<byte>();
+
         private void Bt_communication_handler(Stream str)
         {
             // Inizializzo la stringa di ricezione
             string rxMsg = "";
+            List<byte> rxData = new List<byte>();
 
             // Inizializzo i comandi gestiti dal bluetooth
             List <BtCommand> commands = new List<BtCommand>
@@ -274,11 +295,15 @@ namespace MobileAppDemo
                     int data = str.ReadByte();
                     if (data != -1)
                     {
-                        rxMsg += (char)data;
+                        //rxMsg += (char)data;
+                        rxData.Add((byte)data);
 
                         // Se è abilitata la registrazione del corpo del messaggio
                         if (recordingFile)
-                            rxPayload += (char)data;
+                            rxDataPayload.Add((byte)data);
+                        //rxPayload += (char)data;
+
+                        rxMsg = Encoding.Unicode.GetString(rxData.ToArray());
 
                         // Scorro i comandi
                         foreach (BtCommand cmd in commands)
@@ -289,9 +314,11 @@ namespace MobileAppDemo
                             if (x != -1)
                             {
                                 rxMsg = "";// rxMsg.Remove(x, cmd.Text.Length);
+                                rxData.Clear();
 
                                 if (recordingFile)
-                                { 
+                                {
+                                    rxPayload = Encoding.Unicode.GetString(rxDataPayload.ToArray());
                                     int k = rxPayload.IndexOf(cmd.Text);
                                     if (k != -1)
                                         rxPayload = rxPayload.Remove(k, cmd.Text.Length);
@@ -314,13 +341,18 @@ namespace MobileAppDemo
         #endregion
 
         #region CALLBACKS
+        private void Bluetooth_send_response(BluetoothClient client, string response)
+        {
+            Stream str = client.GetStream();
+            byte[] bResponse = Encoding.ASCII.GetBytes(response);
+            str.Write(bResponse, 0, bResponse.Length);
+        }
+
         private void CallbackPing()
         {
             ResetTimer(commTimeoutTimer);
             UpdatePictureBox(pictureBoxStatus, Properties.Resources.RadioIconGreen);
-            Stream str = btClient.GetStream();
-            byte[] bResponse = Encoding.ASCII.GetBytes("pong");
-            str.Write(bResponse, 0, bResponse.Length);
+            Bluetooth_send_response(btClient, "pong\r\n");
         }
         private void CallbackStartOfFile()
         {
@@ -348,11 +380,14 @@ namespace MobileAppDemo
             UpdatePictureBox(pictureBoxStatus, Properties.Resources.RadioIconGreen);
             recordingFile = false;
 
-            // 8 caratteri di CRC32 e 2 caratteri di CR LF
+            // 8 caratteri di CRC32 e 2 caratteri di CR LF 
             string rxPayloadNoCrc32 = rxPayload.Substring(0, rxPayload.Length - 10);
 
             UInt32 calcCrc32 = Crc32.Append(rxPayloadNoCrc32, Crc32.DEFAULT_CRC32, Crc32.DEFAULT_CRC32_XOR);
             UInt32 rxCrc32 = GetRxCrc32(rxPayload);
+
+            rxPayload = "";
+            rxDataPayload.Clear();
 
             if (calcCrc32 != rxCrc32)
             {
@@ -360,23 +395,32 @@ namespace MobileAppDemo
                 return;
             }
 
-            rxPayload = "";
 
             List<string> lines = rxPayloadNoCrc32.Split('\n').ToList();
-            
-            string lblTicketId = "RECEIPT ID";
+
+            string[] lblTicketId = new string[]
+            {
+                "RECEIPT ID",          // en
+                "ID SCONTRINO",        // it
+                "ID DE RECU ",         // fr
+                "ID DE RECIBO",        // es
+                "ID DO RECEBIMENTO",   // pt
+                "RECEIPT-ID",          // de
+                "ID ODBIORU",          // pl
+                "FIS KIMLIGI",         // tr
+                "ИДЕНТИФИКАТОР ЧЕКА",  // ru
+                "回单号"                // zh-CN
+            };
+
             foreach (string line in lines)
             {
-                if(line.Contains(lblTicketId))
+                if(lblTicketId.Any(substring => line.Contains(substring)))
                 {
                     var fields = line.Trim('\n').Trim('\r').Split(';').ToList();
                     if (fields.Count > 1)
                     {
-                        string folderName = "Tickets";
                         string fileName = $"{fields[1]}.pdf";
-                        PdfUtils.ExportRawLines(Path.Combine(folderName, fileName), lines);
-
-                        PopulateTreeView(".\\Tickets");
+                        PdfUtils.ExportRawLines(Path.Combine(CommonPaths.ticketFolder, fileName), lines);
                         break;
                     }
                 }
@@ -445,6 +489,16 @@ namespace MobileAppDemo
         private void commTimeoutTimer_Tick(object sender, EventArgs e)
         {
             UpdatePictureBox(pictureBoxStatus, Properties.Resources.RadioIconRed);
+        }
+
+        private void openFolderInFileExplorerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Process.Start(CommonPaths.ticketFolder);
+        }
+
+        private void MainGui_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Bluetooth.Disconnect(btClient);
         }
     }
 }

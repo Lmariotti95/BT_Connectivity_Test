@@ -33,7 +33,7 @@ namespace MobileAppDemo
 
         public static UInt32 Append(string msg, UInt32 init, UInt32 finalXor)
         {
-            byte[] bytes = Encoding.UTF8.GetBytes(msg);
+            byte[] bytes = Encoding.Unicode.GetBytes(msg);
             return Append(bytes, init, finalXor);
         }
     }
