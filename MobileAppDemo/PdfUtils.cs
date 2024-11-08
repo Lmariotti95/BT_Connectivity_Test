@@ -35,12 +35,12 @@ namespace MobileAppDemo
 
                     table.WidthPercentage = 100;
 
-                    // Use a Unicode-compatible font
-                    string fontPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Fonts), "Msjh.ttc"); // Adjust font file name as needed
-                    int fontIndex = 1; // 1 = Cinese
-                    string fontPathWithIndex = fontPath + "," + fontIndex;
-                    BaseFont baseFont = BaseFont.CreateFont(fontPathWithIndex, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-                    Font unicodeFont = new Font(baseFont, 6);
+                    // Load fonts
+                    BaseFont baseFontChinese = BaseFont.CreateFont(CommonPaths.fontPathChinese, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+                    BaseFont baseFontCyrillicLatin = BaseFont.CreateFont(CommonPaths.fontPathCyrillicLatin, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+
+                    Font fontChinese = new Font(baseFontChinese, 6);
+                    Font fontCyrillicLatin = new Font(baseFontCyrillicLatin, 6);
 
                     for (int rowIndex = 0; rowIndex < lines.Count; rowIndex++)
                     {
@@ -49,7 +49,12 @@ namespace MobileAppDemo
                         // Add each subitem (column) from the ListViewItem
                         for (int i = 0; i < lines[rowIndex].Count; i++)
                         {
-                            PdfPCell cell = new PdfPCell(new Phrase(lines[rowIndex][i].Trim(), unicodeFont))
+                            string cellText = lines[rowIndex][i].Trim();
+
+                            // Choose font based on characters in the text
+                            Font selectedFont = ContainsChineseCharacters(cellText) ? fontChinese : fontCyrillicLatin;
+
+                            PdfPCell cell = new PdfPCell(new Phrase(cellText, selectedFont))
                             {
                                 MinimumHeight = 20f,       // Set higher row height for data cells
                                 BackgroundColor = bgColor // Set alternating background color
@@ -63,6 +68,11 @@ namespace MobileAppDemo
                     document.Close();
                 }
             }
+        }
+        private static bool ContainsChineseCharacters(string text)
+        {
+            // Basic check for Chinese character ranges
+            return text.Any(c => (c >= 0x4E00 && c <= 0x9FFF) || (c >= 0x3400 && c <= 0x4DBF) || (c >= 0x20000 && c <= 0x2A6DF));
         }
 
         public static void ExportListView(ListView listView, string fileName)

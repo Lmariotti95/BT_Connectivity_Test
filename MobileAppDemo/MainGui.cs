@@ -28,20 +28,16 @@ namespace MobileAppDemo
         {
             InitializeComponent();
 
-            DataParser.Instance.SetCommand(new List<BtCommand>
-            {
-                new BtCommand() { Text = "ping",        Callback = CallbackPing },
-                new BtCommand() { Text = "START FILE",  Callback = CallbackStartOfFile },
-                new BtCommand() { Text = "END OF FILE", Callback = CallbackEndOfFile }
-            });
-
+            // Immagini per il filesystem
             ImageList imageList = new ImageList();
             imageList.Images.Add("Folder", Properties.Resources.folder_ico_48_48); // Add folder icon
             imageList.Images.Add("File", Properties.Resources.file_ico_48_48);     // Add file icon
-            imageList.ImageSize = new Size(32, 32);
+            imageList.ImageSize = new Size(24, 24);
+            imageList.ColorDepth = ColorDepth.Depth32Bit;
             treeViewTickets.ImageList = imageList;
 
             PopulateTreeView(CommonPaths.ticketFolder);
+            // Evento per gestire l'apertura dei file on click
             treeViewTickets.NodeMouseDoubleClick += TreeViewTickets_NodeMouseDoubleClick;
 
             FileSystemWatcher fileSystemWatcher = new FileSystemWatcher(CommonPaths.ticketFolder);
@@ -56,8 +52,12 @@ namespace MobileAppDemo
             fileSystemWatcher.EnableRaisingEvents = true;
 
             //List<List<string>> lines = new List<List<string>>();
-            //List<string> l = new List<string>();
-            //l.Add("微軟正黑體");
+            //List<string> l = new List<string>
+            //{
+            //    "微軟正黑體",
+            //    "Моя учительница",
+            //    "The quick brown fox jumps over the lazy dog!"
+            //};
             //lines.Add(l);
             //PdfUtils.ExportCsvList(lines, Path.Combine(CommonPaths.ticketFolder, "prova.pdf"));
         }
@@ -162,7 +162,7 @@ namespace MobileAppDemo
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Error opening file: " + ex.Message);
+                    MessageBox.Show($"Error opening file: {ex.Message}");
                 }
             }
         }
@@ -182,7 +182,7 @@ namespace MobileAppDemo
             {
                 // Il bluetooth del PC è disattivato/non funzionante/non presente 
                 MessageBox.Show("Bluetooth is turned off");
-                SetStatus($"Not connected");
+                SetStatus("Not connected");
             }
         }
 
@@ -194,7 +194,7 @@ namespace MobileAppDemo
                 // Determino qual'è l'indice dell'elemento che ha scatenato l'evento
                 if (obj == connectToolStripMenuItem.DropDownItems[i])
                 {
-                    SetStatus($"Connecting");
+                    SetStatus("Connecting");
 
                     // Se eventualmente sono già connesso allora mi disconnetto
                     Manage_bt_disconnect();
@@ -203,7 +203,7 @@ namespace MobileAppDemo
                     btConnectedDevice = btDevicesInRange[i];
                     Bluetooth.Connect(btConnectedDevice, Client_connect_thread);
 
-                    SetStatus($"Connected");
+                    SetStatus("Connected");
 
                     break;
                 }
@@ -275,9 +275,9 @@ namespace MobileAppDemo
         #endregion
 
         #region COMUNICAZIONE BLUETOOTH
-        bool recordingFile = false;
-        string rxPayload = "";
-        List<byte> rxDataPayload = new List<byte>();
+        bool recordingFile = false;                  // Flag che abilita la ricezione di un payload di dati
+        string rxPayload = "";                       // Stringa ricevuta (formato unicode)
+        List<byte> rxDataPayload = new List<byte>(); // Stream di byte ricevuti
 
         private void Bt_communication_handler(Stream str)
         {
@@ -301,41 +301,43 @@ namespace MobileAppDemo
                     int data = str.ReadByte();
                     if (data != -1)
                     {
-                        //rxMsg += (char)data;
                         rxData.Add((byte)data);
 
                         // Se è abilitata la registrazione del corpo del messaggio
                         if (recordingFile)
                             rxDataPayload.Add((byte)data);
-                        //rxPayload += (char)data;
 
-                        rxMsg = Encoding.Unicode.GetString(rxData.ToArray());
+                        // I messaggi sono trasmessi SEMPRE in UNICODE quindi ogni singolo byte è trasmesso tramite una word
+                        if (rxData.Count % 2 == 0)
+                        { 
+                            rxMsg = Encoding.Unicode.GetString(rxData.ToArray());
 
-                        // Scorro i comandi
-                        foreach (BtCommand cmd in commands)
-                        {
-                            int x = rxMsg.IndexOf(cmd.Text);
-
-                            // Se la stringa contiene un messaggio valido
-                            if (x != -1)
+                            // Scorro i comandi
+                            foreach (BtCommand cmd in commands)
                             {
-                                rxMsg = "";// rxMsg.Remove(x, cmd.Text.Length);
-                                rxData.Clear();
+                                int x = rxMsg.IndexOf(cmd.Text);
 
-                                if (recordingFile)
+                                // Se la stringa contiene un messaggio valido
+                                if (x != -1)
                                 {
-                                    rxPayload = Encoding.Unicode.GetString(rxDataPayload.ToArray());
-                                    int k = rxPayload.IndexOf(cmd.Text);
-                                    if (k != -1)
-                                        rxPayload = rxPayload.Remove(k, cmd.Text.Length);
-                                }
-                                
-                                if(cmd.Callback != null)
-                                {
-                                    Invoke((Action)(() => 
+                                    rxData.Clear();
+
+                                    // Durante la raccolta del payload becco anche il comando "END OF FILE" quindi vado a rimuoverlo
+                                    // Si potrebbe anche conteggiare una riga in meno ed escludere comunque il problema
+                                    if (recordingFile)
                                     {
-                                        cmd.Callback(); 
-                                    }));
+                                        rxPayload = Encoding.Unicode.GetString(rxDataPayload.ToArray());
+                                        int k = rxPayload.IndexOf(cmd.Text);
+                                        if (k != -1)
+                                            rxPayload = rxPayload.Remove(k, cmd.Text.Length);
+                                    }
+
+                                    // Se il comando ha una callback associata
+                                    if (cmd.Callback != null)
+                                    {
+                                        // La lancio sotto Invoke per evitare eccezioni di operazioni cross-thread
+                                        Invoke((Action)(() => { cmd.Callback(); }));
+                                    }
                                 }
                             }
                         }
@@ -349,6 +351,7 @@ namespace MobileAppDemo
         #region CALLBACKS
         private void Bluetooth_send_response(BluetoothClient client, string response)
         {
+            // Le risposte inviate verso l'MCU continuano ad essere in formato ASCII e non UNICODE
             Stream str = client.GetStream();
             byte[] bResponse = Encoding.ASCII.GetBytes(response);
             str.Write(bResponse, 0, bResponse.Length);
@@ -385,8 +388,10 @@ namespace MobileAppDemo
             ResetTimer(commTimeoutTimer);
             UpdatePictureBox(pictureBoxStatus, Properties.Resources.RadioIconGreen);
             recordingFile = false;
-
-            // 8 caratteri di CRC32 e 2 caratteri di CR LF 
+ 
+            // Il payload porta con se un CRC32 per verificarne la correttezza
+            // Questo è negli ultimi 8 byte ed è seguito da 2 byte di CR LF
+            // e.g. CRC32 = FFE8365C -> [F][F][E][8][3][6][5][C]['\r']['\n']
             string rxPayloadNoCrc32 = rxPayload.Substring(0, rxPayload.Length - 10);
 
             UInt32 calcCrc32 = Crc32.Append(rxPayloadNoCrc32, Crc32.DEFAULT_CRC32, Crc32.DEFAULT_CRC32_XOR);
@@ -397,10 +402,12 @@ namespace MobileAppDemo
 
             if (calcCrc32 != rxCrc32)
             {
+                Bluetooth_send_response(btClient, "ERROR\r\n");
                 MessageBox.Show("Unvalid message received", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
+            Bluetooth_send_response(btClient, "OK\r\n");
 
             List<string> lines = rxPayloadNoCrc32.Split('\n').ToList();
 

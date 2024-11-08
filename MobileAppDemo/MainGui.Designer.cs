@@ -45,7 +45,6 @@
             this.lblStatus = new System.Windows.Forms.Label();
             this.commTimeoutTimer = new System.Windows.Forms.Timer(this.components);
             this.treeViewTickets = new System.Windows.Forms.TreeView();
-            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.contextMenuStripFileSystem = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.openFolderInFileExplorerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
@@ -195,12 +194,6 @@
             this.treeViewTickets.Size = new System.Drawing.Size(1154, 570);
             this.treeViewTickets.TabIndex = 3;
             // 
-            // imageList1
-            // 
-            this.imageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
-            this.imageList1.ImageSize = new System.Drawing.Size(16, 16);
-            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
-            // 
             // contextMenuStripFileSystem
             // 
             this.contextMenuStripFileSystem.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -217,8 +210,8 @@
             // 
             // MainGui
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(1174, 664);
             this.Controls.Add(this.treeViewTickets);
             this.Controls.Add(this.panel1);
@@ -257,7 +250,6 @@
         private System.Windows.Forms.Timer commTimeoutTimer;
         private System.Windows.Forms.PictureBox pictureBoxStatus;
         private System.Windows.Forms.TreeView treeViewTickets;
-        private System.Windows.Forms.ImageList imageList1;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripFileSystem;
         private System.Windows.Forms.ToolStripMenuItem openFolderInFileExplorerToolStripMenuItem;
     }
