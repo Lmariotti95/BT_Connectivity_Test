@@ -4,7 +4,18 @@ Test per la ricezione di file trasmessi da un MCU verso il PC tramite bluetooth
 
 | Version |
 |:-------:|
-|  0.1.0  |
+|  1.0.0  |
+
+## Note di rilascio
+Prima versione preliminare, funziona secondo le specifiche aggiornate al **08/11/2024**   
+
+**Funzionalità:**
+- Implementa la comunicazione come descritto in: [protocollo di comunicazione](./doc/Protocollo_di_trasmissione.md)
+- Si connette in bluetooth con un MCU (1 sola connessione attiva)
+- Mantiene attiva la comunicazione rispondendo attivamente a comandi non sollecitati
+- Riceve i file .csv
+- Converte i file .csv in .pdf dando una formattazione minima
+- Gestisce testi UNICODE (russo/cinese)
 
 ## Bluetooth
 - **Produttore**: u-blox
@@ -25,7 +36,7 @@ La configurazione del modulo è stata fatta riportando quanto descritto in **UBX
 **Soluzione:** Abilitare il service manualmente come descritto in **UBX-14044127 par. 6.24.3 esempio in fondo al paragrafo**
 
 ### Sequenza di setup finale
-```
+```C#
 AT+CGMI       // Legge il nome del produttore
 AT+CGMM       // Legge il nome del modello
 ATE0          // Disattiva l'echo sui comandi
