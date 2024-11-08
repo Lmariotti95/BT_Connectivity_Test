@@ -90,11 +90,13 @@ int16_t main(void)
   if(unicode_msg != NULL)
   {
     uint32_t len = Unicode_strlen(unicode_msg);
-    crc = crc32(unicode_msg, len, CRC32_INIT, CRC32_FINAL_XOR);
-
-    ...
+    cout << crc32((uint8*)unicode_msg, len, CRC32_INIT, CRC32_FINAL_XOR) << endl;
   }
 
   return 0;
 }
 ```
+```plaintext
+Output = 4223647449 -> hex -> FBBFBED9
+```
+
