@@ -36,16 +36,16 @@ La configurazione del modulo è stata fatta riportando quanto descritto in **UBX
 **Soluzione:** Abilitare il service manualmente come descritto in **UBX-14044127 par. 6.24.3 esempio in fondo al paragrafo**
 
 ### Sequenza di setup finale
-```C#
-AT+CGMI       // Legge il nome del produttore
-AT+CGMM       // Legge il nome del modello
-ATE0          // Disattiva l'echo sui comandi
-AT+UBTLE?     // Verifica se la modalità BLE è attiva
+```C
+Send_at_cmd("AT+CGMI");      // Legge il nome del produttore
+Send_at_cmd("AT+CGMM");      // Legge il nome del modello
+Send_at_cmd("ATE0");         // Disattiva l'echo sui comandi
+Send_at_cmd("AT+UBTLE?");     // Verifica se la modalità BLE è attiva
   // Se non è configurato in modalità BLE
-  AT+UBTLE=2  // Configura la modalità BLE
-  AT+UDSC=1,6 // Abilita il server SPS
-  AT&W        // Salva la configurazione
-  AT+CPWROF   // Esegue un reboot
-AT+UBTAD=020A06051218002800110702456E1B926E28F83E744F34F01E9D701 // Abilita il servizio Serial Port
-ATO1          // Entra in Data Mode
+  Send_at_cmd("AT+UBTLE=2");  // Configura la modalità BLE
+  Send_at_cmd("AT+UDSC=1,6"); // Abilita il server SPS
+  Send_at_cmd("AT&W");        // Salva la configurazione
+  Send_at_cmd("AT+CPWROF");   // Esegue un reboot
+Send_at_cmd("AT+UBTAD=020A06051218002800110702456E1B926E28F83E744F34F01E9D701"); // Abilita il servizio Serial Port
+Send_at_cmd("ATO1");          // Entra in Data Mode
 ```
