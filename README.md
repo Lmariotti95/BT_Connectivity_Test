@@ -4,7 +4,7 @@ Test per la ricezione di file trasmessi da un MCU verso il PC tramite bluetooth
 
 | Version |
 |:-------:|
-|  1.0.0  |
+|  1.1.0  |
 
 ## Note di rilascio
 Prima versione preliminare, funziona secondo le specifiche aggiornate al **08/11/2024**   
@@ -16,6 +16,7 @@ Prima versione preliminare, funziona secondo le specifiche aggiornate al **08/11
 - Riceve i file .csv
 - Converte i file .csv in .pdf dando una formattazione minima
 - Gestisce testi UNICODE (russo/cinese)
+- Aggiunta la documentazione per la connessione tramite BLE utilizzando la libreria Plugin.BLE [link](./doc/Connessione_BLE.md)
 
 ## Bluetooth
 - **Produttore**: u-blox
